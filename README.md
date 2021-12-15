@@ -1,2 +1,2 @@
 # kgbtr
-Submission and Comment Search Functionality For KGBTR
+Submission and Comment Searches For KGBTR
