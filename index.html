@@ -49,14 +49,22 @@
                         <span class="input-group-text bi bi-search" id="basic-addon1"></span>
                         <input id="query" type="text" class="form-control" placeholder="Search Reddit" aria-label="query" aria-describedby="basic-addon1">
                     </div>
-                    <div class="container-fluid">
-                        <div class="form-check">
-                            <input id="comment_option" class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
-                            <label class="form-check-label" for="flexRadioDefault1" selected>Comment search</label>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <form class="form-floating">
+                                <input id="numResults" class="form-control" type="number" name="flexRadioDefault" id="flexRadioDefault1" min="1" max="500" value="25">
+                                <label for="floatingInputValue">Number of results</label>
+                            </form>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                            <label class="form-check-label" for="flexRadioDefault1">Submission search</label>
+                        <div class="col-md-12">
+                            <div class="form-check">
+                                <input id="comment_option" class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+                                <label class="form-check-label" for="flexRadioDefault1" selected>Comment search</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                <label class="form-check-label" for="flexRadioDefault1">Submission search</label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -65,11 +73,11 @@
                 <h5>Submissions Results</h5>
                 <table class="table table-striped table-hover table-bordered table-sm">
                     <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Link</th>
-                        <th scope="col">Title</th>
-                      </tr>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Link</th>
+                            <th scope="col">Title</th>
+                        </tr>
                     </thead>
                     <tbody id="submission_tableau">
                     </tbody>
@@ -79,11 +87,11 @@
                 <h5>Comment Results</h5>
                 <table class="table table-striped table-hover table-bordered table-sm">
                     <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Link</th>
-                        <th scope="col">Body</th>
-                      </tr>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Link</th>
+                            <th scope="col">Body</th>
+                        </tr>
                     </thead>
                     <tbody id="comment_tableau">
                     </tbody>
@@ -121,9 +129,10 @@ FREEDOM FOR LORD
         input.addEventListener("keyup", function(event) {
             if (event.key === "Enter" && input.value.length != 0) {
                 // Do the actual work here
-                var option   = $('#comment_option:checked').val();
+                var option = $('#comment_option:checked').val();
+                var size = $('#numResults').val();
                 var keywords = input.value;
-                if (option){
+                if (option) {
                     // Comment option is checked
                     var endpoint = "https://api.pushshift.io/reddit/search/comment/";
                     var table_div = $('#comment_results');
@@ -144,7 +153,8 @@ FREEDOM FOR LORD
                     type: 'GET',
                     data: {
                         q: keywords,
-                        subreddit:"KGBTR"
+                        size: size,
+                        subreddit: "KGBTR"
                     },
                     success: function(response) {
                         var data = response['data'];
@@ -155,16 +165,16 @@ FREEDOM FOR LORD
                         $('#comment_tableau').empty();
 
                         // Add results to the table
-                        for (var i=0; i<data.length; i++){
+                        for (var i = 0; i < data.length; i++) {
                             var res = data[i];
                             var table_row = $("<tr></tr>");
 
                             table_row.append(`<th scope="row">${i+1}</th>`)
                             table_row.append(`<td><a href="https://reddit.com${res['permalink']}">${res['id']}</a></td>`);
 
-                            if (option){
+                            if (option) {
                                 table_row.append(`<td>${res['body']}</td>`);
-                            }else{
+                            } else {
                                 table_row.append(`<td>${res['title']}</td>`);
                             }
 
@@ -184,7 +194,7 @@ FREEDOM FOR LORD
             };
         })
     </script>
-    
+
 </body>
 
 </html>
